@@ -15,26 +15,17 @@ public class BtlTest extends BaseTest {
     private static final String CROWD = "קבלת קהל";
     private static final String PHONE_ANSWER = "מענה טלפוני";
 
-//work
-    @Test
-    @Description("check of data")
-    public void GetInsideBranchesPage()
-    {
-        BranchesPage branchesPage=new BranchesPage(driver);
-        HomePage homePage=new HomePage(driver);
-        homePage.branchesButton();
-        Assertions.assertEquals(branchesPage.getTitle(),TITLE_BRANCHES);
-    }
+
 
 //V work
     @Test
     @Description("הכנסת חישוב דמי לידה")
     public void InsertText()
     {
-        SearchResultMaternityPayPage searchResultMaternityPayPage=new SearchResultMaternityPayPage(driver);
+        HelperFunctions helperFunctions=new HelperFunctions(driver);
         HomePage homePage=new HomePage(driver);
         homePage.searchBornReward();
-        Assertions.assertEquals( searchResultMaternityPayPage.getTitle(),"חישוב סכום דמי לידה ליום");
+        Assertions.assertEquals( helperFunctions.getTitle("//div[@id='mainContent']//h1"),"חישוב סכום דמי לידה ליום");
     }
 
     @Test
@@ -42,10 +33,11 @@ public class BtlTest extends BaseTest {
     public void CheckInBranch()
     {
 
-        BranchesPage branchesPage=new BranchesPage(driver);
+        HelperFunctions helperFunctions=new HelperFunctions(driver);
         HomePage homePage=new HomePage(driver);
         homePage.branchesButton();
-        Assertions.assertEquals(branchesPage.getTitle(),TITLE_BRANCHES);
+        Assertions.assertEquals(helperFunctions.getTitle("//div[@class='opener-bg ']//h1"),TITLE_BRANCHES);
+
         BranchPage branchPage=new BranchPage(driver);
         Assertions.assertEquals(branchPage.getAddres(),ADDRESS);
         Assertions.assertEquals(branchPage.getCrowd(),CROWD);
@@ -56,9 +48,12 @@ public class BtlTest extends BaseTest {
     public void checkYeshivaStudentCalculation() throws InterruptedException {
 
         HomePage homePage=new HomePage(super.driver);
+        HelperFunctions helperFunctions=new HelperFunctions(driver);
         MenuPage menuPage=new MenuPage(super.driver);
         DmeiBtlPage dmeiBtlPage=new DmeiBtlPage(super.driver);
         CalculatorPage calculatorPage=new CalculatorPage(super.driver);
+        SecondStepInCalculatePage secondStepInCalculatePage=new SecondStepInCalculatePage(super.driver);
+
 
         try {
             Thread.sleep(1000);
@@ -70,20 +65,13 @@ public class BtlTest extends BaseTest {
         menuPage.dmeiBtlClick();
         Assertions.assertEquals(dmeiBtlPage.getTitle(),TITLE_DMEI_BTL);
         dmeiBtlPage.calcLink();
-        SecondStepInCalculatePage secondStepInCalculatePage=new SecondStepInCalculatePage(super.driver);
-        Assertions.assertEquals(calculatorPage.getTitle(),TITLE_CALCULATOR);
+        Assertions.assertEquals(helperFunctions.getTitle("//div[@id='mainContent']/div/h1"),TITLE_CALCULATOR);
         calculatorPage.clickDetails();
         secondStepInCalculatePage.noDisability();
         secondStepInCalculatePage.viewResults();
         CalculateResultsPage calculateResultsPage=new CalculateResultsPage(super.driver);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        String res=calculateResultsPage.getTitle();
+        Thread.sleep(5000);
+        String res=helperFunctions.getTitle("//h2[@id='header']");
         Assertions.assertTrue(res.contains(TITLE_FINAL));
         Thread.sleep(5000);
         Assertions.assertTrue(calculateResultsPage.getResults().contains(TITLE_RES));
